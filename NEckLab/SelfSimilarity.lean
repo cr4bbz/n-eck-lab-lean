@@ -118,7 +118,8 @@ def IsTriangleIFSFixedPoint (s : Set ℂ) : Prop :=
 /-- Every genuine IFS fixed point is automatically pre-fixed. -/
 theorem IsTriangleIFSFixedPoint.preFixed {s : Set ℂ}
     (h : IsTriangleIFSFixedPoint s) : IsTriangleIFSPreFixed s := by
-  unfold IsTriangleIFSFixedPoint IsTriangleIFSPreFixed at h ⊢
+  change triangleIFS s = s at h
+  change triangleIFS s ⊆ s
   rw [h]
 
 /-- One IFS step cannot leave the finite-stage orbit. -/
