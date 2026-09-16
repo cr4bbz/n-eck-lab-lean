@@ -4,7 +4,7 @@ import Mathlib.Topology.MetricSpace.Contracting
 
 namespace NEckLab
 
-open Set Topology Metric
+open Set Topology Metric TopologicalSpace
 open scoped Topology
 
 noncomputable section
@@ -18,7 +18,7 @@ IFS is itself a strict contraction with factor `1/2`. Banach's fixed-point theor
 unique nonempty compact fixed point.
 -/
 
-private def halfScale : ℝ≥0 :=
+private def halfScale : NNReal :=
   ⟨(1 : ℝ) / 2, by norm_num⟩
 
 /-- The triangle IFS sends a nonempty compact set to the union of its three compact images. -/
