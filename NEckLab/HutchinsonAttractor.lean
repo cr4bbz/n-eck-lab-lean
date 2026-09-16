@@ -27,6 +27,7 @@ def triangleCompactIFS (K : NonemptyCompacts ℂ) : NonemptyCompacts ℂ := by
   · unfold triangleIFS
     exact isCompact_iUnion fun j => K.isCompact.image (triangleContraction_continuous j)
   · rcases K.nonempty with ⟨z, hz⟩
+    refine ⟨triangleContraction 0 z, ?_⟩
     unfold triangleIFS
     apply Set.mem_iUnion.mpr
     exact ⟨0, ⟨z, hz, rfl⟩⟩
@@ -54,7 +55,7 @@ theorem triangleCompactIFS_dist_le (K L : NonemptyCompacts ℂ) :
         hausdorffEDist_ne_top_of_nonempty_of_bounded
           K.nonempty L.nonempty K.isCompact.isBounded L.isCompact.isBounded
       have hle : infDist a (L : Set ℂ) ≤ dist K L := by
-        rw [NonemptyCompacts.dist_eq]
+        rw [TopologicalSpace.NonemptyCompacts.dist_eq]
         exact infDist_le_hausdorffDist_of_mem ha hfin
       rw [habest] at hle
       exact div_le_div_of_nonneg_right hle (by norm_num)
@@ -73,7 +74,7 @@ theorem triangleCompactIFS_dist_le (K L : NonemptyCompacts ℂ) :
           L.nonempty K.nonempty L.isCompact.isBounded K.isCompact.isBounded
       have hle : infDist b (K : Set ℂ) ≤ dist K L := by
         have h' := infDist_le_hausdorffDist_of_mem hb hfin
-        rw [← NonemptyCompacts.dist_eq] at h'
+        rw [← TopologicalSpace.NonemptyCompacts.dist_eq] at h'
         simpa [dist_comm] using h'
       rw [hbest] at hle
       exact div_le_div_of_nonneg_right hle (by norm_num)
@@ -92,7 +93,8 @@ theorem triangleCompactIFS_lipschitz :
 theorem triangleCompactIFS_contracting :
     ContractingWith halfScale triangleCompactIFS := by
   constructor
-  · norm_num [halfScale]
+  · change ((1 : ℝ) / 2) < 1
+    norm_num
   · exact triangleCompactIFS_lipschitz
 
 /-- Gate 13 existence: there is a nonempty compact fixed point of the three-map IFS. -/
