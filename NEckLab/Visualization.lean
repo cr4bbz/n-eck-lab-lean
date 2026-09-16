@@ -33,16 +33,21 @@ def approxVertex (n k : ℕ) : Float × Float :=
 def approxVertices (n : ℕ) : Array (Float × Float) :=
   (List.range n).map (approxVertex n) |>.toArray
 
+/-- Adapt the computational coordinate pairs to the frame-indexed point type
+expected by `ProofWidgets.Svg`. -/
+private def approxSvgPoints (n : ℕ) : Array (Point vizFrame) :=
+  (approxVertices n).map fun p => (p : Point vizFrame)
+
 /-- Static InfoView rendering of a regular polygon together with its limiting unit circle. -/
 def regularPolygonSvg (n : ℕ) : Svg vizFrame :=
   { elements := #[
       circle (0.0, 0.0) (.abs 1.0)
-        |>.setStroke (110., 110., 110.) (.px 1),
-      polygon (approxVertices n)
-        |>.setStroke (220., 220., 220.) (.px 2)
+        |>.setStroke (0.43, 0.43, 0.43) (.px 1),
+      polygon (approxSvgPoints n)
+        |>.setStroke (0.86, 0.86, 0.86) (.px 2)
         |>.setFill (0.12, 0.12, 0.12),
       text (-1.12, -1.08) s!"n = {n}" (.px 18)
-        |>.setFill (210., 210., 210.)
+        |>.setFill (0.82, 0.82, 0.82)
     ] }
 
 private def triangleView := regularPolygonSvg 3
