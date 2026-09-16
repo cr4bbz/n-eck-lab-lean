@@ -59,8 +59,6 @@ theorem triangleAddressImage_attractor (m : ℕ) :
   | zero =>
       exact triangleAddressImage_zero _
   | succ m ih =>
-      change triangleAddressImage (m + 1) (triangleCompactAttractor : Set ℂ) =
-        (triangleCompactAttractor : Set ℂ)
       rw [triangleAddressImage_succ, ih, triangleCompactAttractor_set_fixed]
 
 /-- A symbolic cylinder is the image of the attractor under one finite address. -/
@@ -101,15 +99,14 @@ theorem triangleWordCompact_dist_attractor_le (m : ℕ) :
       dist ({0} : NonemptyCompacts ℂ) triangleCompactAttractor / (2 : ℝ) ^ m := by
   induction m with
   | zero =>
-      simpa [triangleWordCompact_zero]
+      simp [triangleWordCompact_zero]
   | succ m ih =>
-      change dist (triangleWordCompact (m + 1)) triangleCompactAttractor ≤
-        dist ({0} : NonemptyCompacts ℂ) triangleCompactAttractor / (2 : ℝ) ^ (m + 1)
-      rw [triangleWordCompact_succ, ← triangleCompactAttractor_fixed]
       calc
-        dist (triangleCompactIFS (triangleWordCompact m))
-            (triangleCompactIFS triangleCompactAttractor)
-            ≤ dist (triangleWordCompact m) triangleCompactAttractor / 2 :=
+        dist (triangleWordCompact (m + 1)) triangleCompactAttractor
+            = dist (triangleCompactIFS (triangleWordCompact m))
+                (triangleCompactIFS triangleCompactAttractor) := by
+              rw [triangleWordCompact_succ, triangleCompactAttractor_fixed]
+        _ ≤ dist (triangleWordCompact m) triangleCompactAttractor / 2 :=
           triangleCompactIFS_dist_le _ _
         _ ≤ (dist ({0} : NonemptyCompacts ℂ) triangleCompactAttractor / (2 : ℝ) ^ m) / 2 := by
           exact div_le_div_of_nonneg_right ih (by norm_num)
