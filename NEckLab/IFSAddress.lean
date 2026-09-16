@@ -46,7 +46,7 @@ theorem triangleWordCloud_zero :
   ext z
   constructor
   · rintro ⟨a, ha, rfl⟩
-    have : a = [] := List.length_eq_zero.mp ha
+    have : a = [] := List.eq_nil_of_length_eq_zero ha
     subst a
     simp
   · intro hz
@@ -70,7 +70,7 @@ theorem triangleWordCloud_succ (m : ℕ) :
         refine ⟨j, ?_⟩
         refine ⟨applyTriangleAddress a 0, ?_, ?_⟩
         · exact ⟨a, hlen, rfl⟩
-        · simpa [applyTriangleAddress] using hza.symm
+        · simpa [applyTriangleAddress] using hza
   · intro hz
     unfold triangleIFS at hz
     rcases Set.mem_iUnion.mp hz with ⟨j, hj⟩
