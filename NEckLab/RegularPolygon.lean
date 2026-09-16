@@ -54,7 +54,7 @@ theorem vertex_eq_rotator_pow (n k : ℕ) :
   induction k with
   | zero => simp
   | succ k ih =>
-      rw [Nat.succ_eq_add_one, vertex_succ, ih, pow_succ]
+      rw [vertex_succ, ih, pow_succ]
       ring
 
 /-- `n` copies of the reciprocal angle step recover one complete turn. -/
@@ -73,8 +73,7 @@ theorem rotator_pow_sideCount {n : ℕ} (hn : n ≠ 0) :
       2 * (Real.pi : ℂ) * Complex.I by
         unfold angleStep
         push_cast
-        field_simp [hnC]
-        ring]
+        field_simp [hnC]]
   exact Complex.exp_two_pi_mul_I
 
 /-- In particular, the vertex reached after `n` steps is the starting vertex. -/
