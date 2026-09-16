@@ -37,14 +37,18 @@ theorem triangleContraction_dist (j : Fin 3) (z w : ℂ) :
   rw [h, norm_div]
   norm_num
 
+private def halfNNReal : NNReal :=
+  ⟨(1 : ℝ) / 2, by norm_num⟩
+
 /-- The exact half-scale identity packages each branch as a `1/2`-Lipschitz contraction. -/
 theorem triangleContraction_lipschitz (j : Fin 3) :
-    LipschitzWith (1 / 2 : ℝ≥0) (triangleContraction j) := by
+    LipschitzWith halfNNReal (triangleContraction j) := by
   refine LipschitzWith.of_dist_le_mul ?_
   intro z w
   rw [triangleContraction_dist]
-  change dist z w / 2 ≤ (1 / 2 : ℝ) * dist z w
+  change dist z w / 2 ≤ ((1 : ℝ) / 2) * dist z w
   ring_nf
+  exact le_rfl
 
 /-- Conversely, no branch collapses distances beyond its exact half-scale factor. -/
 theorem triangleContraction_antilipschitz (j : Fin 3) :
@@ -54,6 +58,7 @@ theorem triangleContraction_antilipschitz (j : Fin 3) :
   rw [triangleContraction_dist]
   change dist z w ≤ (2 : ℝ) * (dist z w / 2)
   ring_nf
+  exact le_rfl
 
 /-- Each contraction branch is globally injective. -/
 theorem triangleContraction_injective (j : Fin 3) :
