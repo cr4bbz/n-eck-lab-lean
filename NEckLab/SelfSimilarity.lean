@@ -37,6 +37,36 @@ theorem triangleContraction_dist (j : Fin 3) (z w : ℂ) :
   rw [h, norm_div]
   norm_num
 
+/-- The exact half-scale identity packages each branch as a `1/2`-Lipschitz contraction. -/
+theorem triangleContraction_lipschitz (j : Fin 3) :
+    LipschitzWith (1 / 2 : ℝ≥0) (triangleContraction j) := by
+  refine LipschitzWith.of_dist_le_mul ?_
+  intro z w
+  rw [triangleContraction_dist]
+  change dist z w / 2 ≤ (1 / 2 : ℝ) * dist z w
+  ring_nf
+
+/-- Conversely, no branch collapses distances beyond its exact half-scale factor. -/
+theorem triangleContraction_antilipschitz (j : Fin 3) :
+    AntilipschitzWith 2 (triangleContraction j) := by
+  refine AntilipschitzWith.of_le_mul_dist ?_
+  intro z w
+  rw [triangleContraction_dist]
+  change dist z w ≤ (2 : ℝ) * (dist z w / 2)
+  ring_nf
+
+/-- Each contraction branch is globally injective. -/
+theorem triangleContraction_injective (j : Fin 3) :
+    Function.Injective (triangleContraction j) := by
+  exact (triangleContraction_antilipschitz j).injective
+
+/-- Exact similarities preserve Hausdorff dimension even though they shrink metric distances. -/
+theorem triangleContraction_dimH_image (j : Fin 3) (s : Set ℂ) :
+    dimH (triangleContraction j '' s) = dimH s := by
+  apply le_antisymm
+  · exact (triangleContraction_lipschitz j).dimH_image_le s
+  · exact (triangleContraction_antilipschitz j).le_dimH_image s
+
 /-- Each branch fixes the triangle corner toward which it contracts. -/
 theorem triangleContraction_fixed_corner (j : Fin 3) :
     triangleContraction j (triangleCorner j) = triangleCorner j := by
