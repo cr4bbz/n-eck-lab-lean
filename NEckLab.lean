@@ -9,5 +9,6 @@ import NEckLab.IFSAddress
 import NEckLab.HutchinsonAttractor
 import NEckLab.HutchinsonConvergence
 import NEckLab.SymbolicCylinders
+import NEckLab.CylinderCounting
 import NEckLab.TwoAxis
 import NEckLab.Visualization
