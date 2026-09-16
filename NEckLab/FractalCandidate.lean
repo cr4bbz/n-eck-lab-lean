@@ -42,7 +42,7 @@ theorem sierpinskiApprox_mono (m : ℕ) :
 
 /-- Every finite approximant still has Hausdorff dimension zero. -/
 theorem sierpinskiApprox_dimH_zero (m : ℕ) :
-    MeasureTheory.dimH ((sierpinskiApprox m : Finset ℂ) : Set ℂ) = 0 := by
+    dimH ((sierpinskiApprox m : Finset ℂ) : Set ℂ) = 0 := by
   exact (sierpinskiApprox m).dimH_zero
 
 /-- All points ever produced at a finite refinement depth. -/
@@ -57,9 +57,9 @@ noncomputable def sierpinskiCandidate : Set ℂ :=
 Any positive-dimensional behaviour must therefore enter through the closure/limit operation,
 not through any single finite stage. -/
 theorem sierpinskiOrbit_dimH_zero :
-    MeasureTheory.dimH sierpinskiOrbit = 0 := by
+    dimH sierpinskiOrbit = 0 := by
   unfold sierpinskiOrbit
-  rw [MeasureTheory.dimH_iUnion]
+  rw [dimH_iUnion]
   simp [sierpinskiApprox_dimH_zero]
 
 /-- The finite orbit is contained in its chosen closure candidate. -/
