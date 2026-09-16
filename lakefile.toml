@@ -1,0 +1,16 @@
+name = "n-eck-lab-lean"
+version = "0.1.0"
+defaultTargets = ["NEckLab"]
+
+[leanOptions]
+autoImplicit = false
+relaxedAutoImplicit = false
+pp.unicode.fun = true
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "7fa22735254ddf7e11f119250a9f2d0352bc7c3a"
+
+[[lean_lib]]
+name = "NEckLab"
