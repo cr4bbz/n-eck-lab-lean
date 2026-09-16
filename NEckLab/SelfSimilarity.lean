@@ -23,6 +23,7 @@ invariance alone.
 /-- Each triangle branch is continuous. -/
 theorem triangleContraction_continuous (j : Fin 3) :
     Continuous (triangleContraction j) := by
+  unfold triangleContraction
   fun_prop
 
 /-- Gate 12 metric core: every branch scales all distances by exactly one half. -/
