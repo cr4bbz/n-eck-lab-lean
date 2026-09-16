@@ -37,7 +37,7 @@ theorem triangleContraction_dist (j : Fin 3) (z w : ℂ) :
   rw [h, norm_div]
   norm_num
 
-private def halfNNReal : NNReal :=
+private noncomputable def halfNNReal : NNReal :=
   ⟨(1 : ℝ) / 2, by norm_num⟩
 
 /-- The exact half-scale identity packages each branch as a `1/2`-Lipschitz contraction. -/
