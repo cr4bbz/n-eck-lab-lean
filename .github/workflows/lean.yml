@@ -2,7 +2,7 @@ name: Lean
 
 on:
   push:
-    branches: [main, gate-0-foundations, gate-1-complex-polygons]
+    branches: [main, gate-0-foundations, gate-1-complex-polygons, gate-2-rotation-closure]
   pull_request:
 
 jobs:
