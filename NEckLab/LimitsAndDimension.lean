@@ -44,11 +44,8 @@ theorem tendsto_radialDefect_zero :
     simpa using
       (tendsto_const_nhds.mul tendsto_inverseScale_zero :
         Tendsto (fun n : ℕ => Real.pi * inverseScale n) atTop (𝓝 (Real.pi * 0)))
-  have hcosComp :
-      Tendsto (Real.cos ∘ fun n : ℕ => Real.pi * inverseScale n) atTop (𝓝 1) := by
-    simpa using (Real.continuous_cos.tendsto 0).comp harg
-  have hcos : Tendsto (fun n : ℕ => Real.cos (Real.pi * inverseScale n)) atTop (𝓝 1) := by
-    simpa only [Function.comp_apply] using hcosComp
+  have hcos := (Real.continuous_cos.tendsto 0).comp harg
+  change Tendsto (fun n : ℕ => Real.cos (Real.pi * inverseScale n)) atTop (𝓝 1) at hcos
   change Tendsto (fun n : ℕ => 1 - Real.cos (Real.pi * inverseScale n)) atTop (𝓝 0)
   simpa using
     (tendsto_const_nhds.sub hcos :
