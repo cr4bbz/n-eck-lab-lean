@@ -1,4 +1,5 @@
 import NEckLab.RegularPolygon
+import NEckLab.TwoAxis
 import ProofWidgets.Data.Svg
 import ProofWidgets.Component.HtmlDisplay
 
@@ -7,9 +8,9 @@ namespace NEckLab
 open ProofWidgets Svg
 
 /-!
-A computational visualization layer for the exact `RegularPolygon` model.
+Gate 10: a computational visualization layer for the exact research model.
 The formal geometry remains in `ℝ`/`ℂ`; this module uses `Float` only to draw
-an inspectable approximation in the VS Code InfoView.
+inspectable approximations in the VS Code InfoView.
 -/
 
 private def vizFrame : Frame where
@@ -33,9 +34,7 @@ def approxVertex (n k : ℕ) : Float × Float :=
 def approxVertices (n : ℕ) : Array (Float × Float) :=
   (List.range n).map (approxVertex n) |>.toArray
 
-/-- Adapt the computational coordinate pairs to the frame-indexed point type
-expected by `ProofWidgets.Svg`. The explicit input annotation prevents Lean
-from inferring the mapping function at the target `Point` type too early. -/
+/-- Adapt computational coordinate pairs to the frame-indexed SVG point type. -/
 private def approxSvgPoints (n : ℕ) : Array (Point vizFrame) :=
   (approxVertices n).map fun (p : Float × Float) => (p : Point vizFrame)
 
@@ -51,15 +50,65 @@ def regularPolygonSvg (n : ℕ) : Svg vizFrame :=
         |>.setFill (0.82, 0.82, 0.82)
     ] }
 
+/-- Gate 10: overlay several finite polygon stages against the limiting circle. -/
+def convergenceOverlaySvg : Svg vizFrame :=
+  { elements := #[
+      circle (0.0, 0.0) (.abs 1.0)
+        |>.setStroke (0.95, 0.95, 0.95) (.px 2),
+      polygon (approxSvgPoints 3)
+        |>.setStroke (0.35, 0.35, 0.35) (.px 1),
+      polygon (approxSvgPoints 4)
+        |>.setStroke (0.45, 0.45, 0.45) (.px 1),
+      polygon (approxSvgPoints 6)
+        |>.setStroke (0.58, 0.58, 0.58) (.px 1),
+      polygon (approxSvgPoints 12)
+        |>.setStroke (0.72, 0.72, 0.72) (.px 1),
+      polygon (approxSvgPoints 40)
+        |>.setStroke (0.86, 0.86, 0.86) (.px 1),
+      text (-1.12, -1.08) "n = 3, 4, 6, 12, 40 → circle" (.px 15)
+        |>.setFill (0.82, 0.82, 0.82)
+    ] }
+
+private def approxTriangleContract (j : ℕ) (p : Float × Float) : Float × Float :=
+  let c := approxVertex 3 j
+  ((p.1 + c.1) / 2.0, (p.2 + c.2) / 2.0)
+
+/-- Computational shadow of the three-map self-similar refinement from Gate 8. -/
+def approxFractalCloud : ℕ → Array (Float × Float)
+  | 0 => #[(0.0, 0.0)]
+  | depth + 1 =>
+      let prev := approxFractalCloud depth
+      (prev.map (approxTriangleContract 0)) ++
+      (prev.map (approxTriangleContract 1)) ++
+      (prev.map (approxTriangleContract 2))
+
+private def fractalPointElements (depth : ℕ) : Array (Element vizFrame) :=
+  (approxFractalCloud depth).map fun (p : Float × Float) =>
+    circle (p : Point vizFrame) (.px 2)
+      |>.setFill (0.88, 0.88, 0.88)
+
+/-- Gate 10: inspect a finite fractal-refinement depth next to the same triangle geometry. -/
+def fractalApproxSvg (depth : ℕ) : Svg vizFrame :=
+  { elements := #[
+      polygon (approxSvgPoints 3)
+        |>.setStroke (0.45, 0.45, 0.45) (.px 1),
+      text (-1.12, -1.08) s!"triangle refinement depth m = {depth}" (.px 15)
+        |>.setFill (0.82, 0.82, 0.82)
+    ] ++ fractalPointElements depth }
+
 private def triangleView := regularPolygonSvg 3
 private def squareView := regularPolygonSvg 4
 private def pentagonView := regularPolygonSvg 5
 private def twentyView := regularPolygonSvg 20
+private def convergenceView := convergenceOverlaySvg
+private def fractalDepthFiveView := fractalApproxSvg 5
 
--- Place the cursor on one of these commands to inspect the geometry in VS Code.
+-- Place the cursor on one of these commands to inspect the research objects in VS Code.
 #html triangleView.toHtml
 #html squareView.toHtml
 #html pentagonView.toHtml
 #html twentyView.toHtml
+#html convergenceView.toHtml
+#html fractalDepthFiveView.toHtml
 
 end NEckLab
