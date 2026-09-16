@@ -1,4 +1,5 @@
 import NEckLab.SelfSimilarity
+import Mathlib.Data.Set.Finite.List
 
 namespace NEckLab
 
@@ -81,24 +82,15 @@ theorem triangleWordCloud_succ (m : ℕ) :
 /-- Every pure generation is finite in the set-theoretic sense. -/
 theorem triangleWordCloud_finite (m : ℕ) :
     (triangleWordCloud m).Finite := by
-  let words : Finset (List (Fin 3)) :=
-    ((Finset.univ : Finset (Fin m → Fin 3))).image fun f => List.ofFn f
-  have hsubset :
-      triangleWordCloud m ⊆ applyTriangleAddress · 0 '' (words : Set (List (Fin 3))) := by
-    rintro z ⟨a, ha, rfl⟩
-    have hfin : a.length = m := ha
-    let f : Fin m → Fin 3 := fun i => a.get (by simpa [hfin] using i.isLt)
-    have haf : List.ofFn f = a := by
-      apply List.ext_get
-      · simp [hfin]
-      · intro i hi hiof
-        simp [f, hfin]
-    refine ⟨a, ?_, rfl⟩
-    change a ∈ words
-    unfold words
-    rw [Finset.mem_image]
-    exact ⟨f, Finset.mem_univ _, haf⟩
-  exact (words.finite_toSet.image _).subset hsubset
+  have hwords : {a : List (Fin 3) | a.length = m}.Finite :=
+    List.finite_length_eq (Fin 3) m
+  have himage :
+      ((fun a : List (Fin 3) => applyTriangleAddress a 0) ''
+        {a : List (Fin 3) | a.length = m}).Finite :=
+    hwords.image _
+  apply himage.subset
+  rintro z ⟨a, ha, rfl⟩
+  exact ⟨a, ha, rfl⟩
 
 /-- Consequently every exact finite generation still has Hausdorff dimension zero. -/
 theorem triangleWordCloud_dimH_zero (m : ℕ) :
