@@ -6,5 +6,6 @@ import NEckLab.FractalCandidate
 import NEckLab.ClosureDimension
 import NEckLab.SelfSimilarity
 import NEckLab.IFSAddress
+import NEckLab.HutchinsonAttractor
 import NEckLab.TwoAxis
 import NEckLab.Visualization
