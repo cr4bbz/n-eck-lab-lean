@@ -34,9 +34,10 @@ def approxVertices (n : ℕ) : Array (Float × Float) :=
   (List.range n).map (approxVertex n) |>.toArray
 
 /-- Adapt the computational coordinate pairs to the frame-indexed point type
-expected by `ProofWidgets.Svg`. -/
+expected by `ProofWidgets.Svg`. The explicit input annotation prevents Lean
+from inferring the mapping function at the target `Point` type too early. -/
 private def approxSvgPoints (n : ℕ) : Array (Point vizFrame) :=
-  (approxVertices n).map fun p => (p : Point vizFrame)
+  (approxVertices n).map fun (p : Float × Float) => (p : Point vizFrame)
 
 /-- Static InfoView rendering of a regular polygon together with its limiting unit circle. -/
 def regularPolygonSvg (n : ℕ) : Svg vizFrame :=
