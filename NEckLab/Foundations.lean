@@ -39,12 +39,14 @@ theorem arbitrary_stage_two_preserves_triangle {α : Type*}
   rw [replaceStage_of_ne F 2 3 A (by decide)]
   exact hTriangle
 
-/-- Exterior/rotation angle step written with division. -/
-def angleStep (n : ℕ) : ℝ :=
+/-- Exterior/rotation angle step written with division. Reals and `π` are
+noncomputable in Lean, which is harmless here because this is a mathematical
+specification rather than executable numerical code. -/
+noncomputable def angleStep (n : ℕ) : ℝ :=
   2 * Real.pi / (n : ℝ)
 
 /-- The same step written to expose the reciprocal explicitly. -/
-def angleStepInv (n : ℕ) : ℝ :=
+noncomputable def angleStepInv (n : ℕ) : ℝ :=
   2 * Real.pi * (n : ℝ)⁻¹
 
 /-- `2π / n` and `2π * n⁻¹` are algebraically identical in Lean. -/
@@ -54,6 +56,7 @@ theorem angleStep_eq_angleStepInv (n : ℕ) :
 
 /-- For a genuine polygon stage the side count is nonzero. -/
 theorem polygonStage_ne_zero {n : ℕ} (h : IsPolygonStage n) : n ≠ 0 := by
+  unfold IsPolygonStage at h
   omega
 
 end NEckLab
