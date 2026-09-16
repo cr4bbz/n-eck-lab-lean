@@ -27,7 +27,8 @@ theorem angleStep_eq_two_pi_mul_inverseScale (n : ℕ) :
 /-- Gate 3: local angular change vanishes as the side count diverges. -/
 theorem tendsto_angleStep_zero :
     Tendsto angleStep atTop (𝓝 0) := by
-  simpa [angleStep, inverseScale, div_eq_mul_inv] using
+  change Tendsto (fun n : ℕ => (2 * Real.pi) * (n : ℝ)⁻¹) atTop (𝓝 0)
+  simpa [inverseScale] using
     (tendsto_const_nhds.mul tendsto_inverseScale_zero :
       Tendsto (fun n : ℕ => (2 * Real.pi) * inverseScale n) atTop (𝓝 ((2 * Real.pi) * 0)))
 
@@ -43,16 +44,21 @@ theorem tendsto_radialDefect_zero :
     simpa using
       (tendsto_const_nhds.mul tendsto_inverseScale_zero :
         Tendsto (fun n : ℕ => Real.pi * inverseScale n) atTop (𝓝 (Real.pi * 0)))
-  have hcos : Tendsto (fun n : ℕ => Real.cos (Real.pi * inverseScale n)) atTop (𝓝 1) := by
+  have hcosComp :
+      Tendsto (Real.cos ∘ fun n : ℕ => Real.pi * inverseScale n) atTop (𝓝 1) := by
     simpa using (Real.continuous_cos.tendsto 0).comp harg
-  simpa [radialDefect] using
+  have hcos : Tendsto (fun n : ℕ => Real.cos (Real.pi * inverseScale n)) atTop (𝓝 1) := by
+    simpa only [Function.comp_apply] using hcosComp
+  change Tendsto (fun n : ℕ => 1 - Real.cos (Real.pi * inverseScale n)) atTop (𝓝 0)
+  simpa using
     (tendsto_const_nhds.sub hcos :
       Tendsto (fun n : ℕ => 1 - Real.cos (Real.pi * inverseScale n)) atTop (𝓝 (1 - 1)))
 
 /-- Gate 4: the local/global invariant. The local step shrinks, but `n` copies still make one turn. -/
 theorem local_global_full_turn {n : ℕ} (hn : n ≠ 0) :
     (n : ℝ) * (2 * Real.pi * inverseScale n) = 2 * Real.pi := by
-  simpa [angleStep_eq_two_pi_mul_inverseScale] using angleStep_full_turn hn
+  rw [← angleStep_eq_two_pi_mul_inverseScale]
+  exact angleStep_full_turn hn
 
 /-- The finite set of exact complex vertices of the regular `n`-gon. -/
 noncomputable def vertexSet (n : ℕ) : Set ℂ :=
@@ -66,13 +72,13 @@ theorem vertexSet_finite (n : ℕ) : (vertexSet n).Finite := by
 /-- Gate 5: every finite polygon vertex set has Hausdorff dimension zero,
 independently of how large the side count is. -/
 theorem vertexSet_dimH_zero (n : ℕ) :
-    MeasureTheory.dimH (vertexSet n) = 0 := by
+    dimH (vertexSet n) = 0 := by
   exact (vertexSet_finite n).dimH_zero
 
 /-- Gate 5: increasing side count does not by itself increase the Hausdorff dimension
 of the finite vertex cloud. -/
 theorem vertexSet_dimH_eq (m n : ℕ) :
-    MeasureTheory.dimH (vertexSet m) = MeasureTheory.dimH (vertexSet n) := by
+    dimH (vertexSet m) = dimH (vertexSet n) := by
   rw [vertexSet_dimH_zero, vertexSet_dimH_zero]
 
 end NEckLab
