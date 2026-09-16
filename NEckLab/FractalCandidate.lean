@@ -60,7 +60,7 @@ theorem sierpinskiOrbit_dimH_zero :
     dimH sierpinskiOrbit = 0 := by
   unfold sierpinskiOrbit
   rw [dimH_iUnion]
-  simp [sierpinskiApprox_dimH_zero]
+  simp
 
 /-- The finite orbit is contained in its chosen closure candidate. -/
 theorem sierpinskiOrbit_subset_candidate :
