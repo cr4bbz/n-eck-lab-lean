@@ -5,6 +5,8 @@ namespace NEckLab
 
 open Topology
 
+noncomputable section
+
 /-!
 Gate 12: exact self-similar dynamics of the triangle contraction system.
 
@@ -37,7 +39,7 @@ theorem triangleContraction_dist (j : Fin 3) (z w : ℂ) :
   rw [h, norm_div]
   norm_num
 
-private noncomputable def halfNNReal : NNReal :=
+private def halfNNReal : NNReal :=
   ⟨(1 : ℝ) / 2, by norm_num⟩
 
 /-- The exact half-scale identity packages each branch as a `1/2`-Lipschitz contraction. -/
@@ -102,7 +104,7 @@ theorem triangleContraction_maps_orbit (j : Fin 3) :
   exact ⟨m + 1, triangleContraction_mem_next j hm⟩
 
 /-- The three-branch set operator associated with the triangle contractions. -/
-noncomputable def triangleIFS (s : Set ℂ) : Set ℂ :=
+def triangleIFS (s : Set ℂ) : Set ℂ :=
   ⋃ j : Fin 3, triangleContraction j '' s
 
 /-- One IFS step cannot leave the finite-stage orbit. -/
@@ -138,5 +140,7 @@ theorem triangleIFS_candidate_subset :
   rcases Set.mem_iUnion.mp hz with ⟨j, hj⟩
   rcases hj with ⟨w, hw, rfl⟩
   exact triangleContraction_maps_candidate j hw
+
+end
 
 end NEckLab
