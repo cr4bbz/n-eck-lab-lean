@@ -17,9 +17,9 @@ Gate 8 built finite clouds from the three maps
 Here we prove that these maps really are half-scale similarities and that the finite-stage orbit,
 as well as its closure candidate, is forward invariant under every branch of the system.
 
-This deliberately stops short of asserting the full Hutchinson fixed-point equation or the
-Hausdorff dimension `log 3 / log 2`; those require a stronger attractor theorem than forward
-invariance alone.
+A key distinction is made explicit: a set may be merely pre-fixed under the IFS operator
+(`triangleIFS s ⊆ s`) without being a genuine fixed point (`triangleIFS s = s`). The cumulative
+Gate 8 candidate is proved pre-fixed; identifying a genuine attractor remains a stronger target.
 -/
 
 /-- Each triangle branch is continuous. -/
@@ -107,6 +107,20 @@ theorem triangleContraction_maps_orbit (j : Fin 3) :
 def triangleIFS (s : Set ℂ) : Set ℂ :=
   ⋃ j : Fin 3, triangleContraction j '' s
 
+/-- A pre-fixed point of the triangle IFS only needs to contain all three contracted copies. -/
+def IsTriangleIFSPreFixed (s : Set ℂ) : Prop :=
+  triangleIFS s ⊆ s
+
+/-- A genuine fixed point is exactly reconstructed from its three contracted copies. -/
+def IsTriangleIFSFixedPoint (s : Set ℂ) : Prop :=
+  triangleIFS s = s
+
+/-- Every genuine IFS fixed point is automatically pre-fixed. -/
+theorem IsTriangleIFSFixedPoint.preFixed {s : Set ℂ}
+    (h : IsTriangleIFSFixedPoint s) : IsTriangleIFSPreFixed s := by
+  unfold IsTriangleIFSFixedPoint IsTriangleIFSPreFixed at h ⊢
+  rw [h]
+
 /-- One IFS step cannot leave the finite-stage orbit. -/
 theorem triangleIFS_orbit_subset :
     triangleIFS sierpinskiOrbit ⊆ sierpinskiOrbit := by
@@ -140,6 +154,22 @@ theorem triangleIFS_candidate_subset :
   rcases Set.mem_iUnion.mp hz with ⟨j, hj⟩
   rcases hj with ⟨w, hw, rfl⟩
   exact triangleContraction_maps_candidate j hw
+
+/-- The existing cumulative closure candidate is therefore formally a pre-fixed point. -/
+theorem sierpinskiCandidate_preFixed :
+    IsTriangleIFSPreFixed sierpinskiCandidate := by
+  exact triangleIFS_candidate_subset
+
+/-- To upgrade the current candidate to a genuine attractor, only the reverse inclusion remains. -/
+theorem sierpinskiCandidate_fixedPoint_iff_reverse :
+    IsTriangleIFSFixedPoint sierpinskiCandidate ↔
+      sierpinskiCandidate ⊆ triangleIFS sierpinskiCandidate := by
+  unfold IsTriangleIFSFixedPoint
+  constructor
+  · intro h
+    rw [h]
+  · intro h
+    exact Set.Subset.antisymm triangleIFS_candidate_subset h
 
 end
 
