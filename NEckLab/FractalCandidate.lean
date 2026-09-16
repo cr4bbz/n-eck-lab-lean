@@ -26,12 +26,17 @@ noncomputable def refineTriangleCloud (s : Finset ℂ) : Finset ℂ := by
 
 /-- Finite approximants. We retain earlier points and add the next contracted generation. -/
 noncomputable def sierpinskiApprox : ℕ → Finset ℂ
-  | 0 => {0}
-  | m + 1 => sierpinskiApprox m ∪ refineTriangleCloud (sierpinskiApprox m)
+  | 0 => by
+      classical
+      exact {0}
+  | m + 1 => by
+      classical
+      exact sierpinskiApprox m ∪ refineTriangleCloud (sierpinskiApprox m)
 
 /-- The approximants are nested. -/
 theorem sierpinskiApprox_mono (m : ℕ) :
     (sierpinskiApprox m : Set ℂ) ⊆ sierpinskiApprox (m + 1) := by
+  classical
   intro z hz
   simp [sierpinskiApprox, hz]
 
