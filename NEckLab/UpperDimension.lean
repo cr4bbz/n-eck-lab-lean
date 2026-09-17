@@ -78,8 +78,8 @@ theorem triangleIndexedCylinder_ediam_le_coverRadius (m : ℕ) (a : TriangleWord
 /-- Gate 16 cover package: the `3^m` symbolic cylinders cover the attractor and all have diameter
 bounded by a common quantity tending to zero. -/
 theorem triangleFiniteCover_geometry (m : ℕ) :
-    (triangleCompactAttractor : Set ℂ) ⊆
-        ⋃ a : TriangleWord m, triangleIndexedCylinder a ∧
+    ((triangleCompactAttractor : Set ℂ) ⊆
+        (⋃ a : TriangleWord m, triangleIndexedCylinder a)) ∧
     (∀ a : TriangleWord m,
       ediam (triangleIndexedCylinder a) ≤ triangleCoverRadius m) := by
   constructor
