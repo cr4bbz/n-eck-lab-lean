@@ -20,20 +20,19 @@ each cylinder. This is the analytic input required by `hausdorffMeasure_le_limin
 
 /-- The exact nonnegative scale attached to an address of depth `m`. -/
 private def triangleWordScale (m : ℕ) : NNReal :=
-  ⟨(1 / 2 : ℝ) ^ m, pow_nonneg (by norm_num) _⟩
+  (1 / 2 : NNReal) ^ m
 
 @[simp]
 theorem triangleWordScale_coe (m : ℕ) :
-    (triangleWordScale m : ℝ) = (1 / 2 : ℝ) ^ m := rfl
+    (triangleWordScale m : ℝ) = (1 / 2 : ℝ) ^ m := by
+  simp [triangleWordScale]
 
 /-- Every finite address is globally Lipschitz with its exact scale `2^-|a|`. -/
 theorem applyTriangleAddress_lipschitz (a : List (Fin 3)) :
     LipschitzWith (triangleWordScale a.length) (applyTriangleAddress a) := by
   refine LipschitzWith.of_dist_le_mul ?_
   intro z w
-  rw [applyTriangleAddress_dist]
-  change dist z w / (2 : ℝ) ^ a.length ≤
-    (1 / 2 : ℝ) ^ a.length * dist z w
+  rw [applyTriangleAddress_dist, triangleWordScale_coe]
   rw [one_div_pow]
   ring_nf
   exact le_rfl
