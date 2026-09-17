@@ -10,5 +10,6 @@ import NEckLab.HutchinsonAttractor
 import NEckLab.HutchinsonConvergence
 import NEckLab.SymbolicCylinders
 import NEckLab.CylinderCounting
+import NEckLab.UpperDimension
 import NEckLab.TwoAxis
 import NEckLab.Visualization
